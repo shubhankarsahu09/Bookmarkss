@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sequoia" data-sound="true" data-layout="grid">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> AeroMark Pro — Glassmorphic Bookmark Hub</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22></text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Dynamic Spatial Mesh Wallpaper -->
+  <div class="wallpaper-canvas" id="wallpaperCanvas">
+    <div class="mesh-orb orb-1"></div>
+    <div class="mesh-orb orb-2"></div>
+    <div class="mesh-orb orb-3"></div>
+    <div class="glass-grain"></div>
+  </div>
+
+  <!-- Main Floating Glass Navigation Bar -->
+  <header class="app-header glass-surface">
+    <div class="header-left">
+      <div class="apple-brand" id="brandLogo" title="AeroMark Pro">
+        <span class="apple-symbol"></span>
+        <span class="brand-text">AeroMark</span>
+        <span class="pro-badge">PRO</span>
+      </div>
+    </div>
+
+    <!-- Central Search Input -->
+    <div class="header-search">
+      <div class="search-input-wrapper">
+        <svg class="search-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search or press ⌘K / / to search..." autocomplete="off" />
+        <div class="search-kbd-hint"><kbd>⌘</kbd><kbd>K</kbd></div>
+        <button id="clearSearchBtn" class="search-clear-btn" style="display:none;">✕</button>
+      </div>
+    </div>
+
+    <!-- Header Action Controls -->
+    <div class="header-right">
+      <!-- Layout Toggle (Icons vs Cards) -->
+      <button id="btnToggleLayout" class="icon-control-btn" title="Toggle Layout (App Icons / Cards)">
+        <svg id="iconLayoutGrid" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/></svg>
+      </button>
+
+      <!-- Apple Sound Effects Switcher -->
+      <button id="btnSoundToggle" class="icon-control-btn active" title="Toggle Sound Feedback">
+        <span id="soundIcon">🔔</span>
+      </button>
+
+      <!-- Wallpaper & Theme Selector -->
+      <div class="theme-dropdown-container">
+        <button id="btnThemeMenu" class="icon-control-btn theme-btn" title="Change Wallpaper & Appearance">
+          <span id="activeThemeIcon">🌌</span>
+        </button>
+        <div id="themeMenuDropdown" class="theme-menu-panel glass-sheet">
+          <div class="panel-heading">Appearance & Wallpaper</div>
+          <button class="theme-menu-item" data-theme="sequoia">
+            <span class="theme-swatch swatch-sequoia"></span>
+            <div class="theme-item-label">
+              <span class="theme-title">macOS Sequoia</span>
+              <span class="theme-subtitle">Cosmic Indigo Aurora</span>
+            </div>
+            <span class="check-mark">✓</span>
+          </button>
+          <button class="theme-menu-item" data-theme="sonoma">
+            <span class="theme-swatch swatch-sonoma"></span>
+            <div class="theme-item-label">
+              <span class="theme-title">Sonoma Dusk</span>
+              <span class="theme-subtitle">Warm Rose & Obsidian</span>
+            </div>
+            <span class="check-mark">✓</span>
+          </button>
+          <button class="theme-menu-item" data-theme="vision">
+            <span class="theme-swatch swatch-vision"></span>
+            <div class="theme-item-label">
+              <span class="theme-title">visionOS Spatial</span>
+              <span class="theme-subtitle">Deep Space Cyan</span>
+            </div>
+            <span class="check-mark">✓</span>
+          </button>
+          <button class="theme-menu-item" data-theme="cupertino">
+            <span class="theme-swatch swatch-cupertino"></span>
+            <div class="theme-item-label">
+              <span class="theme-title">Cupertino Frost</span>
+              <span class="theme-subtitle">Crisp Apple Light</span>
+            </div>
+            <span class="check-mark">✓</span>
+          </button>
+          <button class="theme-menu-item" data-theme="oled">
+            <span class="theme-swatch swatch-oled"></span>
+            <div class="theme-item-label">
+              <span class="theme-title">Deep OLED Black</span>
+              <span class="theme-subtitle">Zero-Light Diamond Glow</span>
+            </div>
+            <span class="check-mark">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Backup & Browser Import -->
+      <button id="btnDataHub" class="icon-control-btn" title="Backup, Restore & Browser Import">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+
+      <!-- Category Settings & Manager -->
+      <button id="btnManageCats" class="icon-control-btn" title="Category Settings (Manage, Rename, Delete)">
+        <span style="font-size: 1.05rem;">⚙️</span>
+      </button>
+
+      <!-- Quick Add Category -->
+      <button id="btnQuickAddCat" class="btn-apple-secondary header-btn" title="Create New Category">
+        <span>+ Category</span>
+      </button>
+
+      <!-- Primary Add Bookmark Button -->
+      <button id="btnNewBookmark" class="btn-apple-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>Add Bookmark</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- App Main Content Container -->
+  <main class="app-main-viewport">
+    <!-- Category Shelf & Stats (100% full width, no hidden categories) -->
+    <section class="shelf-bar">
+      <div class="category-pills-row" id="categoryPillsContainer">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- Bookmarks Grid Canvas (3D Tilt & Specular Light Sheen) -->
+    <section class="bookmarks-viewport">
+      <div class="bookmarks-grid layout-grid" id="bookmarksGrid">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Clean Empty State -->
+      <div class="clean-empty-canvas" id="emptyCanvas" style="display:none;">
+        <div class="empty-halo-icon">🔖</div>
+        <h3 class="empty-title">No bookmarks found</h3>
+        <p class="empty-desc">Your canvas is clean. Add your favorite website or import from your browser.</p>
+        <div class="empty-cta-buttons">
+          <button id="emptyAddBtn" class="btn-apple-primary">+ Add First Bookmark</button>
+          <button id="emptyLoadStarterBtn" class="btn-apple-secondary">Load Popular Tools</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Keyboard Hint Bottom Pill -->
+  <aside class="quick-hints-bar glass-surface">
+    <div class="hint-item"><kbd>⌘K</kbd> / <kbd>/</kbd> Search</div>
+    <div class="hint-item"><kbd>N</kbd> New Bookmark</div>
+    <div class="hint-item"><kbd>Esc</kbd> Close</div>
+    <div class="hint-item-highlight">✦ Click any bookmark to open in a new tab</div>
+  </aside>
+
+  <!-- ==========================================================================
+       POPUP 1: 100x Enhanced Add / Edit Bookmark Modal with Live Interactive Preview
+       ========================================================================== -->
+  <div class="spatial-modal-overlay" id="bookmarkModalOverlay">
+    <div class="spatial-modal-card glass-modal" role="dialog" aria-modal="true">
+      <!-- Modal Top Header -->
+      <div class="modal-card-header">
+        <div class="modal-card-title-group">
+          <div class="modal-header-icon-bubble">
+            <span id="modalHeaderEmoji">✨</span>
+          </div>
+          <div>
+            <h2 id="modalHeading" class="modal-main-title">Add Bookmark</h2>
+            <p class="modal-sub-title">Smart auto-detection with real-time live preview</p>
+          </div>
+        </div>
+        <button class="modal-dismiss-btn" id="modalCloseBtn" title="Close (Esc)">✕</button>
+      </div>
+
+      <!-- LIVE INTERACTIVE PREVIEW CARD (WYSIWYG preview of how it will appear) -->
+      <div class="modal-live-preview-box glass-surface">
+        <div class="preview-badge-tag">LIVE PREVIEW</div>
+        <div class="preview-card-replica">
+          <div class="squircle-app-icon preview-squircle" id="modalLiveIconPreview">
+            <span>✨</span>
+          </div>
+          <div class="preview-text-block">
+            <div class="preview-title" id="previewCardTitle">Your Website</div>
+            <div class="preview-domain" id="previewCardDomain">website.com</div>
+            <div class="preview-category-badge" id="previewCardCategory">General</div>
+          </div>
+        </div>
+      </div>
+
+      <form id="bookmarkForm" class="modal-fields-form">
+        <input type="hidden" id="editBookmarkId" value="">
+
+        <!-- Website URL with Smart Protocol Auto-Fill & Paste Button -->
+        <div class="form-field-unit">
+          <div class="field-label-row">
+            <label for="urlInput">Website URL <span class="accent-dot">•</span></label>
+            <button type="button" class="btn-paste-clipboard" id="btnPasteUrl" title="Paste from clipboard">
+              <span>📋 Paste Link</span>
+            </button>
+          </div>
+          <div class="input-glow-wrapper">
+            <span class="input-unit-icon">🔗</span>
+            <input 
+              type="text" 
+              id="urlInput" 
+              placeholder="e.g. figma.com, github.com, or https://..." 
+              required 
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <!-- Title Field -->
+        <div class="form-field-unit">
+          <label for="titleInput">Title <span class="accent-dot">•</span></label>
+          <input 
+            type="text" 
+            id="titleInput" 
+            placeholder="e.g. GitHub" 
+            required 
+          />
+        </div>
+
+        <!-- Category Field with Quick Tap Pills -->
+        <div class="form-field-unit">
+          <label>Category</label>
+          <div class="category-quick-pills" id="modalCategoryPills">
+            <!-- Dynamically populated clickable pill buttons -->
+          </div>
+          <input type="hidden" id="categorySelect" value="General">
+        </div>
+
+        <!-- Optional Notes -->
+        <div class="form-field-unit">
+          <label for="notesInput">Description / Quick Notes <span class="optional-label">(Optional)</span></label>
+          <input 
+            type="text" 
+            id="notesInput" 
+            placeholder="e.g. Daily design tool for UI/UX..." 
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Options: Star Favorite with Authentic Apple Switch -->
+        <div class="form-options-box">
+          <label class="apple-switch-label">
+            <input type="checkbox" id="favCheckbox">
+            <span class="apple-switch-lever"></span>
+            <span class="apple-switch-caption">Mark as Favorite (Pins with gold star ⭐️)</span>
+          </label>
+        </div>
+
+        <!-- Modal Action Footer -->
+        <div class="modal-card-footer">
+          <button type="button" id="modalCancelBtn" class="btn-apple-secondary">Cancel</button>
+          <button type="submit" class="btn-apple-primary" id="modalSaveBtn">
+            <span>Save to AeroMark</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       POPUP 2: 100x Enhanced Data Center with Drag-and-Drop File Zone
+       ========================================================================== -->
+  <div class="spatial-modal-overlay" id="backupModalOverlay">
+    <div class="spatial-modal-card glass-modal data-modal" role="dialog">
+      <div class="modal-card-header">
+        <div class="modal-card-title-group">
+          <div class="modal-header-icon-bubble">💾</div>
+          <div>
+            <h2 class="modal-main-title">Data Center & Sync</h2>
+            <p class="modal-sub-title">Import your existing browser bookmarks or export backup</p>
+          </div>
+        </div>
+        <button class="modal-dismiss-btn" id="backupCloseBtn" title="Close (Esc)">✕</button>
+      </div>
+
+      <!-- Drag & Drop Instant Zone -->
+      <div class="modal-dropzone glass-surface" id="modalFileDropzone">
+        <div class="dropzone-icon">📁</div>
+        <div class="dropzone-text">
+          <strong>Drag & Drop Bookmark File Here</strong>
+          <span>Supports Chrome / Safari / Edge exported <code>.html</code> or AeroMark <code>.json</code></span>
+        </div>
+      </div>
+
+      <div class="backup-grid-stack">
+        <!-- Import from Chrome / Safari / Edge HTML -->
+        <div class="backup-action-card glass-surface">
+          <div class="backup-card-icon-tag">🌐</div>
+          <div class="backup-action-info">
+            <h4>Import from Chrome / Edge / Safari</h4>
+            <p>Upload a standard bookmarks HTML file to migrate all your saved sites in 1 second.</p>
+          </div>
+          <label class="btn-apple-primary file-btn-label">
+            <span>Import .HTML</span>
+            <input type="file" id="browserHtmlInput" accept=".html,.htm" style="display:none;">
+          </label>
+        </div>
+
+        <!-- JSON Backup File -->
+        <div class="backup-action-card glass-surface">
+          <div class="backup-card-icon-tag">📦</div>
+          <div class="backup-action-info">
+            <h4>Export JSON Backup</h4>
+            <p>Save all your bookmarks, custom categories, and orders to a portable JSON backup.</p>
+          </div>
+          <button id="btnExportJsonFile" class="btn-apple-secondary">Download .JSON</button>
+        </div>
+
+        <!-- Restore JSON Backup -->
+        <div class="backup-action-card glass-surface">
+          <div class="backup-card-icon-tag">📥</div>
+          <div class="backup-action-info">
+            <h4>Restore JSON Backup</h4>
+            <p>Restore your saved hub from a previous JSON backup file.</p>
+          </div>
+          <label class="btn-apple-secondary file-btn-label">
+            <span>Select .JSON</span>
+            <input type="file" id="jsonBackupInput" accept=".json" style="display:none;">
+          </label>
+        </div>
+
+        <!-- Default Starter Pack -->
+        <div class="backup-action-card glass-surface">
+          <div class="backup-card-icon-tag">⚡️</div>
+          <div class="backup-action-info">
+            <h4>Load Curated Web Tools</h4>
+            <p>Add 12 essential platforms (GitHub, ChatGPT, Claude, Figma, YouTube, Notion, Linear, etc.).</p>
+          </div>
+          <button id="btnLoadStarterPackAction" class="btn-apple-secondary">Load Pack</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       POPUP 3: Category Manager Modal (Create, Rename & Delete Categories)
+       ========================================================================== -->
+  <div class="spatial-modal-overlay" id="categoryModalOverlay">
+    <div class="spatial-modal-card glass-modal cat-modal" role="dialog" aria-modal="true">
+      <div class="modal-card-header">
+        <div class="modal-card-title-group">
+          <div class="modal-header-icon-bubble">🏷️</div>
+          <div>
+            <h2 class="modal-main-title">Manage Categories</h2>
+            <p class="modal-sub-title">Organize, rename, or delete categories safely</p>
+          </div>
+        </div>
+        <button class="modal-dismiss-btn" id="categoryCloseBtn" title="Close (Esc)">✕</button>
+      </div>
+
+      <!-- Quick Add Category Field -->
+      <div class="cat-manager-add-row">
+        <input type="text" id="catManagerInput" class="apple-input" placeholder="Create new category name..." maxlength="24">
+        <button type="button" id="btnCatManagerAdd" class="btn-apple-primary">Add</button>
+      </div>
+
+      <!-- Categories Scrollable Shelf List -->
+      <div class="cat-manager-list" id="catManagerList">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Quick Restore Starter Categories Action -->
+      <div class="cat-manager-footer-actions">
+        <button type="button" id="btnRestoreDefaultCats" class="btn-apple-secondary restore-cats-btn" title="Restore all default categories & bookmarks">
+          <span>🔄 Restore Default Categories</span>
+        </button>
+      </div>
+
+      <div class="cat-manager-footer-note">
+        <span>💡 <em>Deleting a category safely moves its bookmarks to "General", so you never lose any saved websites!</em></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic Glass Floating Toast Notification -->
+  <div id="dynamicToast" class="glass-toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
