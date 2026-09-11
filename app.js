@@ -509,13 +509,27 @@
     }
   ];
 
+  // State
+  let bookmarks = [];
+  let categories = [];
+  let activeCategory = 'All';
+  let searchQuery = '';
+  let activeTheme = 'sequoia';
+  let activeLayout = 'grid'; // 'grid' or 'cards'
+  let isSoundEnabled = true;
+  let draggedItemIndex = null;
+  let draggedBmId = null;
+  let isDraggingCard = false;
+
   // Helper map for Category resolution
   function getCategoryName(catOrIdOrName) {
     if (!catOrIdOrName) return 'General';
     if (typeof catOrIdOrName === 'object') return catOrIdOrName.name || 'General';
-    const found = categories.find(c => c.id === catOrIdOrName || c.name === catOrIdOrName || c === catOrIdOrName);
-    if (found) {
-      return typeof found === 'object' ? found.name : found;
+    if (Array.isArray(categories) && categories.length > 0) {
+      const found = categories.find(c => c.id === catOrIdOrName || c.name === catOrIdOrName || c === catOrIdOrName);
+      if (found) {
+        return typeof found === 'object' ? found.name : found;
+      }
     }
     const defaultFound = USER_CATEGORIES.find(c => c.id === catOrIdOrName || c.name === catOrIdOrName);
     return defaultFound ? defaultFound.name : catOrIdOrName;
@@ -524,8 +538,11 @@
   function getCategoryObj(catOrIdOrName) {
     if (!catOrIdOrName) return null;
     if (typeof catOrIdOrName === 'object') return catOrIdOrName;
-    return categories.find(c => c.id === catOrIdOrName || c.name === catOrIdOrName) ||
-           USER_CATEGORIES.find(c => c.id === catOrIdOrName || c.name === catOrIdOrName) || null;
+    if (Array.isArray(categories) && categories.length > 0) {
+      const found = categories.find(c => c.id === catOrIdOrName || c.name === catOrIdOrName);
+      if (found) return found;
+    }
+    return USER_CATEGORIES.find(c => c.id === catOrIdOrName || c.name === catOrIdOrName) || null;
   }
 
   function getCategoryIcon(catOrIdOrName) {
@@ -552,18 +569,6 @@
     cupertino: { name: 'Cupertino Frost', icon: '☀️' },
     oled: { name: 'Deep OLED Black', icon: '🌑' }
   };
-
-  // State
-  let bookmarks = [];
-  let categories = [];
-  let activeCategory = 'All';
-  let searchQuery = '';
-  let activeTheme = 'sequoia';
-  let activeLayout = 'grid'; // 'grid' or 'cards'
-  let isSoundEnabled = true;
-  let draggedItemIndex = null;
-  let draggedBmId = null;
-  let isDraggingCard = false;
 
   // DOM Elements cache (populated on init)
   let htmlRoot;
